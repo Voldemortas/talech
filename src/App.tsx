@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom'
+import RouteNoMatch from '../src/pages/RouteNoMatch'
+import RouteList from '../src/pages/RouteList'
+import RouteEdit from '../src/pages/RouteEdit'
+import RouteCreate from '../src/pages/RouteCreate'
+import RouteDetails from '../src/pages/RouteDetails'
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+      <Switch>
+        <Route exact path='/products/create'>
+          <RouteCreate />
+        </Route>
+        <Route exact path='/products/:id/edit'>
+          <RouteEdit />
+        </Route>
+        <Route exact path='/products/:id'>
+          <RouteDetails />
+        </Route>
+        <Route exact path='/products'>
+          <RouteList />
+        </Route>
+        <Route exact path='/'>
+          <Redirect to='/products' />
+        </Route>
+        <Route>
+          <RouteNoMatch />
+        </Route>
+      </Switch>
+    </Router>
+  )
 }
-
-export default App;

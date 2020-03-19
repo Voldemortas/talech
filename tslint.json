@@ -107,7 +107,8 @@
       "config/**/*.js",
       "node_modules/**/*.ts",
       "coverage/lcov-report/*.js",
-      "src/serviceWorker.ts"
+      "src/serviceWorker.ts",
+      "**/*.test.*"
     ]
   }
 }
