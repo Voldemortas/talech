@@ -5,8 +5,7 @@ type DetailsType = {
   id: string | undefined
 }
 
-const Details = (props: DetailsType) => {
-  let { id } = props
+const Details = ({ id }: DetailsType) => {
   return !isPositiveInteger(id) ? (
     <div>Wrong id</div>
   ) : (
