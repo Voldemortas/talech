@@ -1,12 +1,13 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import isPositiveInteger from '../functions/isPositiveInteger'
-import Product from '../Product'
+import Product from '../core/entities/Product'
 import { Button } from '@material-ui/core'
 import EditFormInput from '../components/EditFormInput'
 import EditFormSwitch from './EditFormSwitch'
 import { setForm } from '../actions'
 import { editFormCell } from '../reducers/editForm'
+import Repository from '../core/entities/Repository'
 
 type EditProps = {
   edit: boolean
@@ -17,19 +18,43 @@ type EditProps = {
 const Edit = ({ edit, id, data }: EditProps) => {
   function submitForm(event: React.FormEvent<HTMLFormElement>): void {
     event.preventDefault()
-    let focused = { id: '' }
-    try {
-      focused = { ...{ id: document.activeElement!.id } }
-    } catch (e) {}
-    for (let name in new Product()) {
-      document.getElementById(name)?.focus()
-      document.getElementById(name)?.blur()
-    }
-    if (focused.id !== '') {
-      document.getElementById(focused.id)!.focus()
-    }
-    if (!editForm.some((input) => input[1].error)) {
+    let formData = new Product()
+    formData.Name = editForm.filter((e) => e[0] === 'Name')[0][1].value
+    formData.EAN = editForm.filter((e) => e[0] === 'EAN')[0][1].value
+    formData.Type = editForm.filter((e) => e[0] === 'Type')[0][1].value
+    formData.Weight = +editForm.filter((e) => e[0] === 'Weight')[0][1].value
+    formData.Color = editForm.filter((e) => e[0] === 'Color')[0][1].value
+    formData.Active = editForm.filter((e) => e[0] === 'Active')[0][1].value
+    formData = Product.Normalise(formData)
+    if (Product.isValid(formData)) {
       //INSERT INTO DATABASE
+      const events = Product.create({
+        Name: formData.Name!,
+        EAN: formData.EAN!,
+        Type: formData.Type!,
+        Weight: formData.Weight!,
+        Color: formData.Color!,
+        Active: formData.Active!,
+      })
+      const repo = new Repository<any>().Load('Products')
+      if (!edit) {
+        repo.Insert(events)
+        repo.Save('Products')
+        alert('Saved')
+      }
+    } else {
+      // let's pop errors where needed
+      let focused = { id: '' }
+      try {
+        focused = { ...{ id: document.activeElement!.id } }
+      } catch (e) {}
+      for (let name in new Product()) {
+        document.getElementById(name)?.focus()
+        document.getElementById(name)?.blur()
+      }
+      if (focused.id !== '') {
+        document.getElementById(focused.id)!.focus()
+      }
     }
   }
 
@@ -68,7 +93,7 @@ const Edit = ({ edit, id, data }: EditProps) => {
               'Please write only 8 or 13 digits',
             ]}
             predicate={(input) =>
-              !/^\d{8}$/.test(input) && !/6\d{13}$/.test(input)
+              !/^\d{8}$/.test(input) && !/^\d{13}$/.test(input)
             }
           />
           <EditFormInput

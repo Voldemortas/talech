@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import Edit from '../components/Edit'
-import Product from '../Product'
+import Product from '../core/entities/Product'
 
 test('EDIT | empty id', () => {
   const { getByText } = render(

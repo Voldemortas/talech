@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { FormControlLabel, Switch } from '@material-ui/core'
 import { editFormCell } from '../reducers/editForm'
 import { updateForm } from '../actions'
-import Product from '../Product'
+import Product from '../core/entities/Product'
 
 const EditFormSwitch = ({
   title,

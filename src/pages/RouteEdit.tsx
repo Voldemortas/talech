@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import Edit from '../components/Edit'
 import { useDispatch } from 'react-redux'
 import { setForm } from '../actions'
-import Product from '../Product'
+import Product from '../core/entities/Product'
 
 const RouteEdit = () => {
   const dispatch = useDispatch()
