@@ -1,4 +1,4 @@
-import Product from '../Product'
+import Product from '../core/entities/Product'
 import { actionTypes } from '../actions'
 const valErrPair: { value: any; error: boolean } = { value: '', error: false }
 export type editFormCell = [keyof Product, typeof valErrPair]

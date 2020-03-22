@@ -1,4 +1,4 @@
-import Product from './Product'
+import Product from './core/entities/Product'
 export type actionTypes =
   | { type: 'UPDATE'; field: keyof Product; value: any; error: boolean }
   | { type: 'SET'; value: Product }
@@ -16,5 +16,5 @@ export const setForm = (value: Product): { type: 'SET'; value: Product } => {
 }
 
 export const newForm = () => {
-  return setForm(new Product())
+  return setForm(Product.Normalise(new Product()))
 }
