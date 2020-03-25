@@ -1,11 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import './index.css'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 import { createStore, compose } from 'redux'
 import reducer from './reducers/index'
 import { Provider } from 'react-redux'
+import './Style.css'
 
 declare global {
   interface Window {

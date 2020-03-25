@@ -1,0 +1,71 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.addButton {
+  float: right;
+  color: #4162ce;
+  position: relative;
+  left: 40px;
+  top: -10px;
+}
+.addButton :hover {
+  cursor: pointer;
+  transform: scale(1.035, 1.035);
+}
+
+.header {
+  margin-bottom: 15px;
+  height: 60px;
+  background-color: #037bfc;
+}
+
+.headerLogo {
+  font-weight: 600;
+  font-size: 20px;
+  position: relative;
+  left: 40px;
+  top: 17px;
+}
+
+.headerLogo a {
+  color: white;
+  text-decoration: none;
+}
+.headerLogo a:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+.details {
+  width: 300;
+  display: inline-block;
+  font-size: 20px;
+}
+
+.editForm {
+  max-width: 500px;
+  width: 100%;
+  display: inline-block;
+  padding: 15px 0;
+  text-align: center;
+}
+
+@media only screen and (max-width: 1190px) {
+  .addButton {
+    left: 0;
+    top: 5px;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .MuiBox-root-99 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
