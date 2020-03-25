@@ -2,7 +2,6 @@ import Product from '../core/entities/Product'
 import { actionTypes } from '../actions'
 const valErrPair: { value: any; error: boolean } = { value: '', error: false }
 export type editFormCell = [keyof Product, typeof valErrPair]
-export type editFormAction = { type: keyof Product; data: typeof valErrPair }
 const defaultState: editFormCell[] = [
   ['Name', valErrPair],
   ['EAN', valErrPair],
@@ -16,7 +15,7 @@ export default function editForm(
   action: actionTypes
 ): typeof defaultState {
   switch (action.type) {
-    case 'SET': {
+    case 'SET_FORM': {
       return [
         ['Name', { value: action.value.Name, error: false }],
         ['EAN', { value: action.value.EAN, error: false }],
@@ -26,7 +25,7 @@ export default function editForm(
         ['Active', { value: action.value.Active, error: false }],
       ]
     }
-    case 'UPDATE': {
+    case 'UPDATE_FORM': {
       const { field, value, error } = action
       let newState = state.filter((s) => s[0] !== field)
       return [...newState, [field, { value, error }]]
