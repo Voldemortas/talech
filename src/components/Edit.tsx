@@ -40,6 +40,10 @@ const Edit = (props: EditProps) => {
         repo.Insert(events)
         repo.Save('Products')
         alert('Saved')
+      } else {
+        repo.Update({ id: +id!, data: events })
+        repo.Save('Products')
+        alert('Edited')
       }
     } else {
       // let's pop errors where needed

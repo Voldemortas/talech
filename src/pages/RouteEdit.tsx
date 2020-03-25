@@ -4,20 +4,30 @@ import Edit from '../components/Edit'
 import { useDispatch } from 'react-redux'
 import { setForm } from '../actions'
 import Product from '../core/entities/Product'
+import Repository from '../core/entities/Repository'
+import { Reducer } from '@nxcd/tardis'
+import ProductWasCreatedEvent from '../core/entities/ProductWasCreatedEvent'
 
 const RouteEdit = () => {
-  const dispatch = useDispatch()
-  const tempProduct = new Product(
-    'DataTraveler 4gb',
-    '12345678',
-    'usb key',
-    5,
-    'White',
-    true
-  )
-  dispatch(setForm(tempProduct))
   let { id } = useParams()
-  return <Edit edit={true} id={id} data={tempProduct} />
+  const dispatch = useDispatch()
+  let repo = new Repository<any>().Load('Products')
+  let rows = repo.Select({ id: +id! })
+  if (rows.length === 0) {
+    rows = repo.Select({ id: +id!, deleted: true })
+    if (rows.length === 0) {
+      return <div>No item found</div>
+    } else {
+      return <div>Item was deleted</div>
+    }
+  }
+  let row = rows[0].Data
+  const productReducer = new Reducer<Product>({
+    [ProductWasCreatedEvent.eventName]: ProductWasCreatedEvent.commit,
+  })
+  const data = productReducer.reduce(new Product(), row)
+  dispatch(setForm(data))
+  return <Edit edit={true} id={id} data={data} />
 }
 
 export default RouteEdit
