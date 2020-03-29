@@ -14,8 +14,8 @@ export default class Repository<T> {
   private AutoIncrement = 0
   private Data: IData<T>[] = []
 
-  public Insert(data: T): void {
-    this.Data.push({ id: ++this.AutoIncrement, Data: [data], Deleted: false })
+  public Insert(data: T[]): void {
+    this.Data.push({ id: ++this.AutoIncrement, Data: data, Deleted: false })
   }
 
   public Select(
@@ -35,12 +35,12 @@ export default class Repository<T> {
     return temp.filter((d) => d.Data.filter(predicate!))
   }
 
-  public Update(props: { id: number; data: T }): void {
+  public Update(props: { id: number; data: T[] }): void {
     const { id, data } = props
     this.Data = [
       ...this.Data.filter((d) => d.id !== id),
       ...this.Data.filter((d) => d.id === id).map((d) => {
-        return { ...d, Data: [...d.Data, data] }
+        return { ...d, Data: [...d.Data, ...data] }
       }),
     ]
   }

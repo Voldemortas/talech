@@ -9,6 +9,8 @@ const defaultState: editFormCell[] = [
   ['Weight', { value: 0, error: false }],
   ['Color', valErrPair],
   ['Active', { value: true, error: false }],
+  ['Amount', { value: 0, error: false }],
+  ['Price', { value: 0, error: false }],
 ]
 export default function editForm(
   state = defaultState,
@@ -23,6 +25,8 @@ export default function editForm(
         ['Weight', { value: action.value.Weight, error: false }],
         ['Color', { value: action.value.Color, error: false }],
         ['Active', { value: action.value.Active, error: false }],
+        ['Amount', { value: action.value.Amount, error: false }],
+        ['Price', { value: action.value.Price, error: false }],
       ]
     }
     case 'UPDATE_FORM': {

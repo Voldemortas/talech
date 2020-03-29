@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import isPositiveInteger from '../functions/isPositiveInteger'
 import Product from '../core/entities/Product'
-import { Button } from '@material-ui/core'
+import { Button, Paper } from '@material-ui/core'
 import EditFormInput from '../components/EditFormInput'
 import EditFormSwitch from './EditFormSwitch'
 import { setForm } from '../actions'
@@ -24,17 +24,25 @@ const Edit = (props: EditProps) => {
     formData.Weight = +editForm.filter((e) => e[0] === 'Weight')[0][1].value
     formData.Color = editForm.filter((e) => e[0] === 'Color')[0][1].value
     formData.Active = editForm.filter((e) => e[0] === 'Active')[0][1].value
+    formData.Amount = +editForm.filter((e) => e[0] === 'Amount')[0][1].value
+    formData.Price = +editForm.filter((e) => e[0] === 'Price')[0][1].value
     formData = Product.Normalise(formData)
     if (Product.isValid(formData)) {
       //INSERT INTO DATABASE
-      const events = Product.create({
-        Name: formData.Name!,
-        EAN: formData.EAN!,
-        Type: formData.Type!,
-        Weight: formData.Weight!,
-        Color: formData.Color!,
-        Active: formData.Active!,
-      })
+      const events = Product.create(
+        formData.isBaseSame(data!)
+          ? null
+          : {
+              Name: formData.Name!,
+              EAN: formData.EAN!,
+              Type: formData.Type!,
+              Weight: formData.Weight!,
+              Color: formData.Color!,
+              Active: formData.Active!,
+            },
+        formData.Amount === data!.Amount ? null : formData.Amount,
+        formData.Price === data!.Price ? null : formData.Price
+      )
       const repo = new Repository<any>().Load('Products')
       if (!edit) {
         repo.Insert(events)
@@ -70,11 +78,15 @@ const Edit = (props: EditProps) => {
   return !isPositiveInteger(id) && edit ? (
     <div>Wrong id</div>
   ) : (
-    <div>
-      <div>
-        Placeholder for{' '}
-        {edit ? `editing selected (${id}) product` : `creating new products`}
-      </div>
+    <Paper
+      style={{
+        width: 500,
+        display: 'inline-block',
+        marginTop: 15,
+        paddingTop: 15,
+        paddingBottom: 15,
+      }}
+    >
       <div style={{ textAlign: 'center' }}>
         <form autoComplete='off' onSubmit={submitForm}>
           <EditFormInput
@@ -115,7 +127,7 @@ const Edit = (props: EditProps) => {
             label='Weight'
             required={true}
             helperTexts={['Grams, up to 1 decimal point', 'Wrong weight']}
-            predicate={(input) => +input <= 0 && !/^\d+\.?\d+$/.test(input)}
+            predicate={(input) => +input <= 0 || !/^\d*\.?\d+$/.test(input)}
             type='number'
             inputProps={{ step: '0.1' }}
           />
@@ -128,6 +140,27 @@ const Edit = (props: EditProps) => {
               'Color field must not be empty',
             ]}
             predicate={(input) => input === ''}
+          />
+          <EditFormInput
+            title='Amount'
+            label='Amount'
+            required={true}
+            helperTexts={[
+              'How many items are there?',
+              'Amount should be a positive integer',
+            ]}
+            type='number'
+            inputProps={{ step: '1' }}
+            predicate={(input) => !/^\d+$/.test(input)}
+          />
+          <EditFormInput
+            title='Price'
+            label='Price'
+            required={true}
+            helperTexts={['Price in €', 'Price should be above 0']}
+            type='number'
+            inputProps={{ step: '0.01' }}
+            predicate={(input) => !/^\d+\.?\d*$/.test(input) || +input <= 0}
           />
           <EditFormSwitch title='Active' label='Active' />
           {edit ? (
@@ -153,7 +186,7 @@ const Edit = (props: EditProps) => {
           </Button>
         </form>
       </div>
-    </div>
+    </Paper>
   )
 }
 

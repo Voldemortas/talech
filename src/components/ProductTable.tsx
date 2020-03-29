@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
@@ -8,17 +7,14 @@ import TableHead from '@material-ui/core/TableHead'
 import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
 import Checkbox from '@material-ui/core/Checkbox'
-import IconButton from '@material-ui/core/IconButton'
-import Tooltip from '@material-ui/core/Tooltip'
-import DeleteIcon from '@material-ui/icons/Delete'
+import { updateTable } from '../actions'
+import Repository from '../core/entities/Repository'
+import { IProductCreationParams } from '../core/entities/ProductWasCreatedEvent'
 import Product from '../core/entities/Product'
 import { useDispatch, useSelector } from 'react-redux'
 import { editTableCell } from '../reducers/editTable'
-import { updateTable } from '../actions'
 
 type Order = 'asc' | 'desc'
 
@@ -45,7 +41,10 @@ const headCells: HeadCell[] = [
     disablePadding: false,
     label: 'Color',
   },
+  { id: 'Amount', numeric: false, disablePadding: false, label: 'Amount' },
+  { id: 'Price', numeric: false, disablePadding: false, label: 'Price' },
   { id: 'Active', numeric: false, disablePadding: false, label: 'Active' },
+  { id: 'UpdatedAt', numeric: false, disablePadding: false, label: '' },
 ]
 
 interface EnhancedTableProps {
@@ -101,17 +100,12 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   )
 }
 
-const EnhancedTableToolbar = () => {
-  return (
-    <Toolbar>
-      <Typography variant='h6' id='tableTitle'>
-        Warehouse
-      </Typography>
-    </Toolbar>
-  )
-}
-
-const ProductTable = () => {
+const ProductTable = (
+  props: React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLDivElement>,
+    HTMLDivElement
+  >
+) => {
   const dispatch = useDispatch()
   const { editTable } = useSelector(
     (state: { editTable: editTableCell }) => state
@@ -145,10 +139,11 @@ const ProductTable = () => {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, editTable.length - page * rowsPerPage)
 
+  const repo = new Repository<any>().Load('Products')
+
   return (
-    <div>
-      <Paper>
-        <EnhancedTableToolbar />
+    <div {...props}>
+      <Paper style={{ marginTop: 15 }}>
         <TableContainer>
           <Table
             aria-labelledby='tableTitle'
@@ -165,7 +160,7 @@ const ProductTable = () => {
             <TableBody>
               {editTable
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
+                .map((row) => {
                   return (
                     <TableRow key={row.value.Name!}>
                       <TableCell align='left'>{row.value.Name}</TableCell>
@@ -173,12 +168,21 @@ const ProductTable = () => {
                       <TableCell align='left'>{row.value.Type}</TableCell>
                       <TableCell align='right'>{row.value.Weight}</TableCell>
                       <TableCell align='left'>{row.value['Color']}</TableCell>
+                      <TableCell align='right'>{row.value.Amount}</TableCell>
+                      <TableCell align='right'>{row.value.Price}</TableCell>
                       <TableCell align='left'>
                         <Checkbox
                           checked={row.value.Active!}
                           onChange={(e) => {
                             let temp = { ...row.value }
                             temp.Active = !row.value.Active
+                            repo.Update({
+                              data: Product.create(
+                                temp as IProductCreationParams
+                              ),
+                              id: row.id,
+                            })
+                            repo.Save('Products')
                             dispatch(updateTable(row.id, temp as Product))
                           }}
                         />

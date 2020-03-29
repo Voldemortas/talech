@@ -7,6 +7,9 @@ import Product from '../core/entities/Product'
 import Repository from '../core/entities/Repository'
 import { Reducer } from '@nxcd/tardis'
 import ProductWasCreatedEvent from '../core/entities/ProductWasCreatedEvent'
+import ProductPriceWasEdited from '../core/entities/ProductPriceWasEditedEvent'
+import ProductAmountWasEdited from '../core/entities/ProductAmountWasEditedEvent'
+import Layout from '../components/Layout'
 
 const RouteEdit = () => {
   let { id } = useParams()
@@ -24,6 +27,8 @@ const RouteEdit = () => {
   let row = rows[0].Data
   const productReducer = new Reducer<Product>({
     [ProductWasCreatedEvent.eventName]: ProductWasCreatedEvent.commit,
+    [ProductPriceWasEdited.eventName]: ProductPriceWasEdited.commit,
+    [ProductAmountWasEdited.eventName]: ProductAmountWasEdited.commit,
   })
   const data = productReducer.reduce(new Product(), row)
   dispatch(setForm(data))
