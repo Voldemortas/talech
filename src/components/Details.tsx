@@ -109,7 +109,7 @@ const Details = (props: DetailsType) => {
       return acc
     }, [])
     .slice(Math.max(0, prices.length - 5))
-    .map((e) => [new Date(e.timestamp).getTime(), e.data.Price])
+    .map((e) => [new Date(e.timestamp).getTime(), +e.data.Price])
 
   const amounts: ProductAmountWasEdited[] = row.filter(
     (e) => e.name === ProductAmountWasEdited.eventName
@@ -127,7 +127,7 @@ const Details = (props: DetailsType) => {
       return acc
     }, [])
     .slice(Math.max(0, prices.length - 5))
-    .map((e) => [new Date(e.timestamp).getTime(), e.data.Amount])
+    .map((e) => [new Date(e.timestamp).getTime(), +e.data.Amount])
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue)
