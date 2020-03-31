@@ -69,21 +69,16 @@ const FieldValuePair = (props: IFVP) => {
   )
 }
 
-const Details = (props: DetailsType) => {
-  const { id } = props
-
+const Details = ({ id }: DetailsType) => {
   const theme = useTheme()
   const [value, setValue] = React.useState(0)
 
   let repo = new Repository<any>().Load('Products')
   let rows = repo.Select({ id: +id! })
-  if (rows.length === 0) {
-    rows = repo.Select({ id: +id!, deleted: true })
-    if (rows.length === 0) {
-      return <div>No item found</div>
-    } else {
-      return <div>Item was deleted</div>
-    }
+  if (rows.length === 0 || !isPositiveInteger(id)) {
+    return <div>No item found</div>
+  } else if (rows[0].Deleted) {
+    return <div>Item was deleted</div>
   }
   let row = rows[0].Data
   const productReducer = new Reducer<Product>({

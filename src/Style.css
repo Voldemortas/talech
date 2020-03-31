@@ -60,6 +60,10 @@ body {
   width: 50px;
 }
 
+.highlightRow {
+  background-color: tomato;
+}
+
 @media only screen and (max-width: 1190px) {
   .addButton {
     left: 0;

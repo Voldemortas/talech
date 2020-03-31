@@ -157,7 +157,10 @@ const ProductTable = (
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
                   return (
-                    <TableRow key={row.value.Name!}>
+                    <TableRow
+                      key={row.value.Name!}
+                      className={+row.value.Amount! === 0 ? 'highlightRow' : ''}
+                    >
                       <TableCell align='left'>{row.value.Name}</TableCell>
                       <TableCell align='right' className='hiddingCell'>
                         {row.value.EAN}
@@ -178,7 +181,7 @@ const ProductTable = (
                           predicate={(input) => !/^\d+$/.test(input)}
                           updateFunc={(value) => {
                             repo.Update({
-                              data: Product.create(null, value.Amount),
+                              data: Product.create(null, +value.Amount!),
                               id: row.id,
                             })
                             repo.Save('Products')
@@ -196,7 +199,7 @@ const ProductTable = (
                           }
                           updateFunc={(value) => {
                             repo.Update({
-                              data: Product.create(null, null, value.Price),
+                              data: Product.create(null, null, +value.Price!),
                               id: row.id,
                             })
                             repo.Save('Products')

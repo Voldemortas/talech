@@ -8,7 +8,6 @@ export default function editTable(
 ): typeof defaultState {
   switch (action.type) {
     case 'SET_TABLE': {
-      console.log(action)
       return action.value
     }
     case 'UPDATE_TABLE': {
