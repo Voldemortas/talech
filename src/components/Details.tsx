@@ -97,6 +97,17 @@ const Details = (props: DetailsType) => {
     (e) => e.name === ProductPriceWasEdited.eventName
   )
   const priceHistory: [number, number][] = prices
+    .reduce((acc: ProductPriceWasEdited[], cur, ind) => {
+      if (ind !== 0) {
+        if (acc[acc.length - 1].data.Price !== cur.data.Price) {
+          //if price is the same, don't push it into array
+          acc.push(cur)
+        }
+      } else {
+        acc.push(cur)
+      }
+      return acc
+    }, [])
     .slice(Math.max(0, prices.length - 5))
     .map((e) => [new Date(e.timestamp).getTime(), e.data.Price])
 
@@ -104,6 +115,17 @@ const Details = (props: DetailsType) => {
     (e) => e.name === ProductAmountWasEdited.eventName
   )
   const amountHistory: [number, number][] = amounts
+    .reduce((acc: ProductAmountWasEdited[], cur, ind) => {
+      if (ind !== 0) {
+        if (acc[acc.length - 1].data.Amount !== cur.data.Amount) {
+          //if amount is the same, don't push it into array
+          acc.push(cur)
+        }
+      } else {
+        acc.push(cur)
+      }
+      return acc
+    }, [])
     .slice(Math.max(0, prices.length - 5))
     .map((e) => [new Date(e.timestamp).getTime(), e.data.Amount])
 

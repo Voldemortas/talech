@@ -17,6 +17,7 @@ import { updateTable } from '../actions'
 import Repository from '../core/entities/Repository'
 import { IProductCreationParams } from '../core/entities/ProductWasCreatedEvent'
 import { Button } from '@material-ui/core'
+import TableInput from './TableInput'
 
 interface HeadCell {
   disablePadding: boolean
@@ -60,21 +61,21 @@ const headCells: HeadCell[] = [
     numeric: false,
     disablePadding: false,
     label: 'Color',
-    hidding: true,
+    hidding: false,
   },
   {
     id: 'Amount',
     numeric: true,
     disablePadding: false,
     label: 'Amount',
-    hidding: true,
+    hidding: false,
   },
   {
     id: 'Price',
     numeric: true,
     disablePadding: false,
-    label: 'Price',
-    hidding: true,
+    label: 'Price €',
+    hidding: false,
   },
   {
     id: 'Active',
@@ -167,14 +168,40 @@ const ProductTable = (
                       <TableCell align='right' className='hiddingCell'>
                         {row.value.Weight}
                       </TableCell>
-                      <TableCell align='left' className='hiddingCell'>
-                        {row.value['Color']}
+                      <TableCell align='left'>{row.value['Color']}</TableCell>
+                      <TableCell align='right'>
+                        <TableInput
+                          title='Amount'
+                          helperTexts={['', 'Expected integer']}
+                          parentId={row.id}
+                          inputProps={{ step: '1' }}
+                          predicate={(input) => !/^\d+$/.test(input)}
+                          updateFunc={(value) => {
+                            repo.Update({
+                              data: Product.create(null, value.Amount),
+                              id: row.id,
+                            })
+                            repo.Save('Products')
+                          }}
+                        />
                       </TableCell>
-                      <TableCell align='right' className='hiddingCell'>
-                        {row.value.Amount}
-                      </TableCell>
-                      <TableCell align='right' className='hiddingCell'>
-                        {row.value.Price}
+                      <TableCell align='right'>
+                        <TableInput
+                          title='Price'
+                          helperTexts={['', 'Expected above 0']}
+                          parentId={row.id}
+                          inputProps={{ step: '0.01' }}
+                          predicate={(input) =>
+                            !/^\d+\.?\d*$/.test(input) || +input <= 0
+                          }
+                          updateFunc={(value) => {
+                            repo.Update({
+                              data: Product.create(null, null, value.Price),
+                              id: row.id,
+                            })
+                            repo.Save('Products')
+                          }}
+                        />
                       </TableCell>
                       <TableCell align='left'>
                         <Checkbox

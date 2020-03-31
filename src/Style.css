@@ -56,10 +56,21 @@ body {
   text-align: center;
 }
 
+.tableInput {
+  width: 50px;
+}
+
 @media only screen and (max-width: 1190px) {
   .addButton {
     left: 0;
     top: 5px;
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  .hiddingCell {
+    display: none !important;
+    visibility: hidden !important;
   }
 }
 
